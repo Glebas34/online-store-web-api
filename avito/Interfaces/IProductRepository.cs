@@ -1,6 +1,15 @@
-﻿namespace avito.Interfaces
+﻿using System.Collections;
+using avito.Models;
+
+namespace avito.Interfaces
 {
-    public class IProductRepository
+    public interface IProductRepository
     {
+        Task<List<Product>> GetProducts();
+        Task<Product> GetProduct(int id);
+        bool DeleteProduct(Product product);
+        bool CreateProduct(Product product);
+        bool UpdateProduct(Product product);
+        bool Save();
     }
 }
