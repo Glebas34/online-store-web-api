@@ -12,6 +12,11 @@ namespace avito.Repository
             _context = context;
         }
 
+        public bool CategoryExists(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool CreateCategory(Category category)
         {
             _context.Add(category);

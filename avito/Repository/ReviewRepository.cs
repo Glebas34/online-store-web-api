@@ -33,6 +33,11 @@ namespace avito.Repository
             return await _context.Reviews.ToListAsync();
         }
 
+        public bool ReviewExists(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Save()
         {
             var saved = _context.SaveChanges();

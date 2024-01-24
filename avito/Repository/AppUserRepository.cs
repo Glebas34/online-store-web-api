@@ -33,5 +33,10 @@ namespace avito.Repository
             _context.Users.Update(user);
             return Save();
         }
+
+        public bool UserExists(string id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -11,5 +11,6 @@ namespace avito.Interfaces
         bool CreateProduct(Product product);
         bool UpdateProduct(Product product);
         bool Save();
+        bool ProductExists(int id);
     }
 }

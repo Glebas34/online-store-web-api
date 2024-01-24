@@ -40,6 +40,11 @@ namespace avito.Repository
             return saved > 0 ? true : false;
         }
 
+        public bool ShoppingCartExists(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool UpdateShoppingCart(ShoppingCart shoppingCart)
         {
             _context.Update(shoppingCart);

@@ -13,6 +13,7 @@ namespace avito.Interfaces
 
 
         public bool Update(AppUser user);
+        bool UserExists(string id);
 
     }
 }

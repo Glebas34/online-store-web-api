@@ -36,6 +36,11 @@ namespace avito.Repository
             return await _context.Products.ToListAsync();
         }
 
+        public bool ProductExists(int id)
+        {
+            return _context.Products.Any(p => p.Id == id);
+        }
+
         public bool Save()
         {
             var saved = _context.SaveChanges();
