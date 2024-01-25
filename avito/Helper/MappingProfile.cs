@@ -1,6 +1,14 @@
-﻿namespace avito.Helper
+﻿using AutoMapper;
+using avito.Dto;
+using avito.Models;
+
+namespace avito.Helper
 {
-    public class MappingProfile
+    public class MappingProfile: Profile
     {
+        public MappingProfile()
+        {
+            CreateMap<Product, ProductDto>();
+        }
     }
 }
