@@ -16,6 +16,5 @@ namespace avito.Data
         public DbSet<ShoppingCartItem> ShoppingCartItems { get;set;}
         public DbSet<Category> Categories { get;set;}
         public DbSet<ShoppingCartItemShoppingCarts> ShoppingCartItemShoppingCarts { get;set;}
-        public DbSet<ProductAppUser> ProductAppUsers { get;set;}
     }
 }

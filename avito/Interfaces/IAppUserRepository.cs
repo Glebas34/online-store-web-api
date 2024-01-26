@@ -17,4 +17,3 @@ namespace avito.Interfaces
 
     }
 }
-}
