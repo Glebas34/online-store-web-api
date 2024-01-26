@@ -7,6 +7,6 @@
         public string Description { get; set; }
         public Category Category { get; set; }
         public AppUser Seller { get; set; }
-        public float Price { get; set; }
+        public decimal Price { get; set; }
     }
 }

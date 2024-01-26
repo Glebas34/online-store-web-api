@@ -6,7 +6,7 @@ namespace avito.Models
     {
         public int Id { get; set; }
         public Product Product { get; set; }
-        public float Price { get; set; }   
+        public decimal Price { get; set; }   
         public ShoppingCart? ShoppingCart { get; set; }
         public ICollection<ShoppingCartItemShoppingCarts> ShoppingCartItemShoppingCarts { get; set; }
     }
