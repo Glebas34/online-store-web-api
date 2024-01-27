@@ -1,6 +1,6 @@
 ﻿namespace avito.Models
 {
-    public class ShoppingCartItemShoppingCarts
+    public class ShoppingCartItemShoppingCart
     {
         public int ShoppingCartItemId {  get; set; }
         public int ShoppingCartId {  get; set; }

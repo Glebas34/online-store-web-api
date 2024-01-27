@@ -8,6 +8,6 @@ namespace avito.Models
         public Product Product { get; set; }
         public decimal Price { get; set; }   
         public ShoppingCart? ShoppingCart { get; set; }
-        public ICollection<ShoppingCartItemShoppingCarts> ShoppingCartItemShoppingCarts { get; set; }
+        public ICollection<ShoppingCartItemShoppingCart> ShoppingCartItemShoppingCarts { get; set; }
     }
 }
