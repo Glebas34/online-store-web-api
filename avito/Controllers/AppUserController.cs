@@ -31,7 +31,7 @@ namespace avito.Controllers
         [ProducesResponseType(200, Type = typeof(AppUser))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetAppUser(string userId) {
-            if (!_appUserRepository.UserExists(userId)) {
+            if (!await _appUserRepository.AppUserExists(userId)) {
                 NotFound();
             }
             var user = await _appUserRepository.GetAppUserById(userId);
@@ -69,9 +69,8 @@ namespace avito.Controllers
                 ModelState.AddModelError("", "Пользователь с такой почтой уже существует");
                 return StatusCode(422, ModelState);
             }
-            var appUserMap = _mapper.Map<AppUserDto>(appUserDto);
-            var result = await _userManager.CreateAsync(new AppUser() { UserName = appUserMap.UserName, Email = appUserMap.Email }, password);
-            if (!result.Succeeded)
+            var appUserMap = _mapper.Map<AppUser>(appUserDto);
+            if (await _appUserRepository.CreateAppUser(password,appUserMap))
             {
                 ModelState.AddModelError("", "Что-то пошло не так при сохранении");
                 return StatusCode(500, ModelState);
@@ -79,7 +78,34 @@ namespace avito.Controllers
             return Ok("Успешно создано");
         }
 
-
+        [HttpDelete("{appUserId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> DeleteAppUser(string appUserId)
+        {
+            if (!await _appUserRepository.AppUserExists(appUserId))
+            {
+                return NotFound();
+            }
+            var appUserToDelete = await _appUserRepository.GetAppUserById(appUserId);
+            var productsToDelete = await _productRepository.GetProductsOfUser(appUserId);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if(!_productRepository.DeleteProducts(productsToDelete))
+            {
+                ModelState.AddModelError("", "Что-то пошло не так при удалении");
+                return StatusCode(500, ModelState);
+            }
+            if (!await _appUserRepository.DeleteAppUser(appUserToDelete))
+            {
+                ModelState.AddModelError("", "Что-то пошло не так при удалении");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
+        }
 
     }
 }

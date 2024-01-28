@@ -26,6 +26,12 @@ namespace avito.Repository
             return Save();
         }
 
+        public bool DeleteProducts(List<Product> products)
+        {
+            _context.RemoveRange(products);
+            return Save();
+        }
+
         async public Task<Product> GetProduct(int id)
         {
             return await _context.Products.FindAsync(id);
@@ -34,6 +40,12 @@ namespace avito.Repository
         async public Task<List<Product>> GetProducts()
         {
             return await _context.Products.ToListAsync();
+        }
+
+        public async Task<List<Product>> GetProductsOfUser(string appUserId)
+        {
+            var products = await _context.Products.Where(p => p.Seller.Id == appUserId).ToListAsync();
+            return products;
         }
 
         public bool ProductExists(int id)

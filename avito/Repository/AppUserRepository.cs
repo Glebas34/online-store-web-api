@@ -1,6 +1,7 @@
 ﻿using avito.Data;
 using avito.Interfaces;
 using avito.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace avito.Repository
@@ -8,8 +9,11 @@ namespace avito.Repository
     public class AppUserRepository: IAppUserRepository
     {
         private readonly AppDbContext _context;
-        public AppUserRepository(AppDbContext context) {
+        private readonly UserManager<AppUser> _userManager;
+        public AppUserRepository(AppDbContext context, UserManager<AppUser> userManager)
+        {
             _context = context;
+            _userManager = userManager;
         }
 
         async public Task<List<AppUser>> GetAllAppUsers()
@@ -20,6 +24,11 @@ namespace avito.Repository
         public async Task<AppUser> GetAppUserById(string id)
         {
             return await _context.Users.FindAsync(id);
+        }
+
+        public async Task<bool> CreateAppUser(string password, AppUser user) {
+            var result = await _userManager.CreateAsync(new AppUser() { UserName = user.UserName, Email = user.Email }, password);
+            return result.Succeeded;
         }
 
         public bool Save()
@@ -34,9 +43,15 @@ namespace avito.Repository
             return Save();
         }
 
-        public bool UserExists(string id)
+        public async Task<bool> AppUserExists(string id)
         {
-            throw new NotImplementedException();
+            var result = await _userManager.FindByIdAsync(id);
+            return result!=null;
+        }
+        public async Task<bool> DeleteAppUser(AppUser appUser)
+        {
+            var result = await _userManager.DeleteAsync(appUser);
+            return result.Succeeded;
         }
     }
 }

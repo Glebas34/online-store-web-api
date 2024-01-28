@@ -11,9 +11,12 @@ namespace avito.Interfaces
 
         public bool Save();
 
+        public Task<bool> CreateAppUser(string password, AppUser user);
 
         public bool Update(AppUser user);
-        bool UserExists(string id);
+        public Task<bool> AppUserExists(string id);
+        public Task<bool> DeleteAppUser(AppUser appUser);
+        
 
     }
 }
