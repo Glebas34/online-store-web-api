@@ -9,6 +9,7 @@ namespace avito.Helper
         public MappingProfile()
         {
             CreateMap<Product, ProductDto>();
+            CreateMap<AppUser, AppUserDto>();
         }
     }
 }

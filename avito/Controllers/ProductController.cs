@@ -52,7 +52,7 @@ namespace avito.Controllers
             return Ok(products);
         }
 
-        [HttpPost("{product}")]
+        [HttpPost("{productCreate}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> CreateProduct([FromQuery] int catId,[FromQuery] string sellerId, [FromBody] ProductDto productCreate) {
