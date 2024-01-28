@@ -1,4 +1,6 @@
-﻿using avito.Interfaces;
+﻿using AutoMapper;
+using avito.Dto;
+using avito.Interfaces;
 using avito.Models;
 using avito.Repository;
 using Microsoft.AspNetCore.Http;
@@ -11,20 +13,26 @@ namespace avito.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
-        public ProductController(IProductRepository productRepository)
+        private readonly ICategoryRepository _categoryRepository; 
+        private readonly IAppUserRepository _appUserRepository;
+        private readonly IMapper _mapper;
+        public ProductController(IProductRepository productRepository, ICategoryRepository categoryRepository, IAppUserRepository appUserRepository, IMapper mapper)
         {
             _productRepository = productRepository;
+            _categoryRepository = categoryRepository;
+            _appUserRepository = appUserRepository;
+            _mapper = mapper;
         }
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(Product))]
         [ProducesResponseType(400)]
-        public IActionResult GetProduct(int id)
+        public async Task<IActionResult> GetProduct(int id)
         {
             if (_productRepository.ProductExists(id))
             {
                 return NotFound();
             }
-            var product = _productRepository.GetProduct(id);
+            var product = await _productRepository.GetProduct(id);
             if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -35,8 +43,8 @@ namespace avito.Controllers
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Product>))]
         [ProducesResponseType(400)]
-        public IActionResult GetProducts() {
-            var products = _productRepository.GetProducts();
+        public async Task<IActionResult> GetProducts() {
+            var products = await _productRepository.GetProducts();
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -47,17 +55,75 @@ namespace avito.Controllers
         [HttpPost("{product}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateProduct(Product product) {
-            if(product == null)
+        public async Task<IActionResult> CreateProduct([FromQuery] int catId,[FromQuery] string sellerId, [FromBody] ProductDto productCreate) {
+            if(productCreate == null)
             {
                 return BadRequest(ModelState);
             }
-            if (!_productRepository.CreateProduct(product))
+            if (_productRepository.ProductExists(productCreate.Id) != null)
+            {
+                ModelState.AddModelError("", "Объявление уже существует");
+                return StatusCode(422, ModelState);
+            }
+            var productMap = _mapper.Map<Product>(productCreate);
+            var category = await _categoryRepository.GetCategory(catId);
+            var seller = await _appUserRepository.GetAppUserById(sellerId);
+            productMap.Seller = seller;
+            productMap.Category = category;
+            if (!_productRepository.CreateProduct(productMap))
             {
                 ModelState.AddModelError("", "Что-то пошло не так при сохранении");
                 return StatusCode(500, ModelState);
             }
-            return Ok("Успешно создан");
+            return Ok("Успешно создано");
+        }
+
+        [HttpPut("{productId}")]
+        [ProducesResponseType(400)]
+        public IActionResult UpdateProduct(int productId,[FromBody]ProductDto updatedProduct)
+        {
+            if (updatedProduct==null)
+            {
+                return BadRequest(ModelState);
+            }
+            if(productId!=updatedProduct.Id) {
+                return BadRequest(ModelState);
+            }
+            if(_productRepository.ProductExists(productId))
+            {
+                return NotFound();
+            }
+            if(!ModelState.IsValid) {
+                return BadRequest();
+            }
+            var productMap = _mapper.Map<Product>(updatedProduct);
+            if (!_productRepository.UpdateProduct(productMap))
+            {
+                ModelState.AddModelError("", "Что-то пошло не так при сохранении");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Успешно обновлено");
+        }
+
+        [HttpDelete("{productId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> DeleteProduct(int productId) {
+            if (!_productRepository.ProductExists(productId))
+            {
+                return NotFound();
+            }
+            var productToDelete = await _productRepository.GetProduct(productId);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if(!_productRepository.DeleteProduct(productToDelete)) {
+                ModelState.AddModelError("", "Что-то пошло не так при удалении");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
         }
     }
 }
