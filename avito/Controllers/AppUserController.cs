@@ -28,13 +28,13 @@ namespace avito.Controllers
         }
 
         [HttpGet("{userId}")]
-        [ProducesResponseType(200, Type = typeof(AppUser))]
+        [ProducesResponseType(200, Type = typeof(AppUserDto))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetAppUser(string userId) {
             if (!await _appUserRepository.AppUserExists(userId)) {
                 NotFound();
             }
-            var user = await _appUserRepository.GetAppUserById(userId);
+            var user = _mapper.Map<AppUserDto>(await _appUserRepository.GetAppUserById(userId));
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -43,11 +43,11 @@ namespace avito.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<AppUser>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<AppUserDto>))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetAppUsers()
         {
-            var users = await _appUserRepository.GetAllAppUsers();
+            var users = _mapper.Map<List<AppUserDto>>(await _appUserRepository.GetAllAppUsers());
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

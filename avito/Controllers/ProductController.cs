@@ -24,7 +24,7 @@ namespace avito.Controllers
             _mapper = mapper;
         }
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(Product))]
+        [ProducesResponseType(200, Type = typeof(ProductDto))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetProduct(int id)
         {
@@ -32,7 +32,7 @@ namespace avito.Controllers
             {
                 return NotFound();
             }
-            var product = await _productRepository.GetProduct(id);
+            var product = _mapper.Map<ProductDto>(await _productRepository.GetProduct(id));
             if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -41,10 +41,10 @@ namespace avito.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Product>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<ProductDto>))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetProducts() {
-            var products = await _productRepository.GetProducts();
+            var products = _mapper.Map<List<ProductDto>>(await _productRepository.GetProducts());
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
