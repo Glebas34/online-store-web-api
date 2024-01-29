@@ -12,6 +12,8 @@ namespace avito.Helper
             CreateMap<ProductDto, Product>();
             CreateMap<AppUser, AppUserDto>();
             CreateMap<AppUserDto, AppUser>();
+            CreateMap<Category, CategoryDto>();
+            CreateMap<CategoryDto, Category>();
         }
     }
 }

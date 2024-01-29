@@ -60,7 +60,7 @@ namespace avito.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (_productRepository.ProductExists(productCreate.Id) != null)
+            if (!_productRepository.ProductExists(productCreate.Id))
             {
                 ModelState.AddModelError("", "Объявление уже существует");
                 return StatusCode(422, ModelState);
