@@ -14,7 +14,7 @@ namespace avito.Repository
 
         public bool CategoryExists(int id)
         {
-            throw new NotImplementedException();
+            return _context.Categories.Any(p => p.Id == id);
         }
 
         public bool CreateCategory(Category category)

@@ -42,7 +42,7 @@ namespace avito.Repository
 
         public bool ShoppingCartExists(int id)
         {
-            throw new NotImplementedException();
+            return _context.ShoppingCarts.Any(p => p.Id == id);
         }
 
         public bool UpdateShoppingCart(ShoppingCart shoppingCart)
