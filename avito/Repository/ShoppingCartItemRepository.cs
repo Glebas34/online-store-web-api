@@ -13,44 +13,32 @@ namespace avito.Repository
             _context = context;
         }
 
-        public bool CreateShoppinCartItem(ShoppingCartItem shoppingCartItem)
-        {
-            throw new NotImplementedException();
-        }
 
-        public bool CreateShoppingCart(ShoppingCartItem shoppingCartItem)
+        public bool CreateShoppingCartItem(int shoppingCartId,ShoppingCartItem shoppingCartItem)
         {
+            var shoppingCart = _context.ShoppingCarts.Find(shoppingCartId);
+            var shoppingCartItemShoppingCart = new ShoppingCartItemShoppingCart {
+                ShoppingCart = shoppingCart,
+                ShoppingCartItem = shoppingCartItem,
+            };
+            _context.Add(shoppingCartItemShoppingCart);
             _context.Add(shoppingCartItem);
             return Save();
         }
 
-        public bool DeleteShoppinCartItem(ShoppingCartItem shoppingCartItem)
-        {
-            throw new NotImplementedException();
-        }
 
-        public bool DeleteShoppingCart(ShoppingCartItem shoppingCartItem)
+        public bool DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem)
         {
             _context.Remove(shoppingCartItem);
             return Save();
         }
 
-        public Task<ShoppingCartItem> GetShoppinCartItem(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        async public Task<ShoppingCartItem> GetShoppingCart(int id)
+        async public Task<ShoppingCartItem> GetShoppingCartItem(int id)
         {
             return await _context.ShoppingCartItems.FindAsync(id);
         }
 
-        public Task<List<ShoppingCartItem>> GetShoppingCartItems()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<ShoppingCartItem>> GetShoppingCarts()
+        public async Task<List<ShoppingCartItem>> GetShoppingCartItems()
         {
             return await _context.ShoppingCartItems.ToListAsync();
         }
@@ -66,15 +54,11 @@ namespace avito.Repository
             throw new NotImplementedException();
         }
 
-        public bool UpdateShoppinCartItem(ShoppingCartItem shoppingCartItem)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool UpdateShoppingCart(ShoppingCart shoppingCartItem)
+        public bool UpdateShoppingCartItem(ShoppingCartItem shoppingCartItem)
         {
             _context.Update(shoppingCartItem);
             return Save();
         }
+
     }
 }

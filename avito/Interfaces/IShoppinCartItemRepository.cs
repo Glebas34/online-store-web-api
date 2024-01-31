@@ -5,10 +5,10 @@ namespace avito.Interfaces
     public interface IShoppingCartItemRepository
     {
         Task<List<ShoppingCartItem>> GetShoppingCartItems();
-        Task<ShoppingCartItem> GetShoppinCartItem(int id);
-        bool DeleteShoppinCartItem(ShoppingCartItem shoppingCartItem);
-        bool CreateShoppinCartItem(ShoppingCartItem shoppingCartItem);
-        bool UpdateShoppinCartItem(ShoppingCartItem shoppingCartItem);
+        Task<ShoppingCartItem> GetShoppingCartItem(int id);
+        bool DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem);
+        bool CreateShoppingCartItem(int shoppingCartId, ShoppingCartItem shoppingCartItem);
+        bool UpdateShoppingCartItem(ShoppingCartItem shoppingCartItem);
         bool Save();
         bool ShoppingCartItemExists(int id);
     }
