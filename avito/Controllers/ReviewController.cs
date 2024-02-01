@@ -10,67 +10,70 @@ namespace avito.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ReviewController : ControllerBase
     {
-        private readonly IProductRepository _productRepository;
-        private readonly ICategoryRepository _categoryRepository; 
+        private readonly IReviewRepository _reviewRepository;
         private readonly IAppUserRepository _appUserRepository;
+        private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
-        public ProductController(IProductRepository productRepository, ICategoryRepository categoryRepository, IAppUserRepository appUserRepository, IMapper mapper)
+        public ReviewController(IReviewRepository reviewRepository, IMapper mapper,
+            IAppUserRepository appUserRepository, IProductRepository productRepository)
         {
-            _productRepository = productRepository;
-            _categoryRepository = categoryRepository;
-            _appUserRepository = appUserRepository;
+            _reviewRepository = reviewRepository;
             _mapper = mapper;
+            _appUserRepository = appUserRepository;
+            _productRepository = productRepository;
         }
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(ProductDto))]
+        [ProducesResponseType(200, Type = typeof(ReviewDto))]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetProduct(int id)
+        public async Task<IActionResult> GetReview(int id)
         {
-            if (_productRepository.ProductExists(id))
+            if (_reviewRepository.ReviewExists(id))
             {
                 return NotFound();
             }
-            var product = _mapper.Map<ProductDto>(await _productRepository.GetProduct(id));
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            return Ok(product);
-        }
-
-        [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<ProductDto>))]
-        [ProducesResponseType(400)]
-        public async Task<IActionResult> GetProducts() {
-            var products = _mapper.Map<List<ProductDto>>(await _productRepository.GetProducts());
+            var review = _mapper.Map<ReviewDto > (await _reviewRepository.GetReview(id));
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            return Ok(products);
+            return Ok(review);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<ReviewDto>))]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetProducts()
+        {
+            var reviews = _mapper.Map<List<ReviewDto>>(await _reviewRepository.GetReviews());
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            return Ok(reviews);
         }
 
         [HttpPost("{productCreate}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> CreateProduct([FromQuery] int catId,[FromQuery] string sellerId, [FromBody] ProductDto productCreate) {
-            if(productCreate == null)
+        public async Task<IActionResult> CreateReview([FromQuery] int productId, [FromQuery] string reviewerId, [FromBody] ReviewDto reviewCreate)
+        {
+            if (reviewCreate == null)
             {
                 return BadRequest(ModelState);
             }
-            if (!_productRepository.ProductExists(productCreate.Id))
+            if (!_reviewRepository.ReviewExists(reviewCreate.Id))
             {
                 ModelState.AddModelError("", "Объявление уже существует");
                 return StatusCode(422, ModelState);
             }
-            var productMap = _mapper.Map<Product>(productCreate);
-            var category = await _categoryRepository.GetCategory(catId);
-            var seller = await _appUserRepository.GetAppUserById(sellerId);
-            productMap.Seller = seller;
-            productMap.Category = category;
-            if (!_productRepository.CreateProduct(productMap))
+            var reviewMap = _mapper.Map<Review>(reviewCreate);
+            var product = await _productRepository.GetProduct(productId);
+            var reviewer = await _appUserRepository.GetAppUserById(reviewerId);
+            reviewMap.Reviewer = reviewer;
+            reviewMap.Product = product;
+            if (!_reviewRepository.CreateReview(reviewMap))
             {
                 ModelState.AddModelError("", "Что-то пошло не так при сохранении");
                 return StatusCode(500, ModelState);
@@ -78,28 +81,30 @@ namespace avito.Controllers
             return Ok("Успешно создано");
         }
 
-        [HttpPut("{productId}")]
+        [HttpPut("{reviewId}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
-        public IActionResult UpdateProduct(int productId,[FromBody]ProductDto updatedProduct)
+        public IActionResult UpdateReview(int reviewId, [FromBody] ReviewDto updatedReview)
         {
-            if (updatedProduct==null)
+            if (updatedReview == null)
             {
                 return BadRequest(ModelState);
             }
-            if(productId!=updatedProduct.Id) {
+            if (reviewId != updatedReview.Id)
+            {
                 return BadRequest(ModelState);
             }
-            if(_productRepository.ProductExists(productId))
+            if (_reviewRepository.ReviewExists(reviewId))
             {
                 return NotFound();
             }
-            if(!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return BadRequest();
             }
-            var productMap = _mapper.Map<Product>(updatedProduct);
-            if (!_productRepository.UpdateProduct(productMap))
+            var reviewMap = _mapper.Map<Review>(updatedReview);
+            if (!_reviewRepository.UpdateReview(reviewMap))
             {
                 ModelState.AddModelError("", "Что-то пошло не так при сохранении");
                 return StatusCode(500, ModelState);
@@ -107,21 +112,23 @@ namespace avito.Controllers
             return Ok("Успешно обновлено");
         }
 
-        [HttpDelete("{productId}")]
+        [HttpDelete("{reviewId}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> DeleteProduct(int productId) {
-            if (!_productRepository.ProductExists(productId))
+        public async Task<IActionResult> DeleteReview(int reviewId)
+        {
+            if (!_reviewRepository.ReviewExists(reviewId))
             {
                 return NotFound();
             }
-            var productToDelete = await _productRepository.GetProduct(productId);
+            var reviewToDelete = await _reviewRepository.GetReview(reviewId);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            if(!_productRepository.DeleteProduct(productToDelete)) {
+            if (!_reviewRepository.DeleteReview(reviewToDelete))
+            {
                 ModelState.AddModelError("", "Что-то пошло не так при удалении");
                 return StatusCode(500, ModelState);
             }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using avito.Models;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace avito.Data
 {
@@ -14,5 +15,6 @@ namespace avito.Data
         public DbSet<ShoppingCart> ShoppingCarts { get;set;}
         public DbSet<ShoppingCartItem> ShoppingCartItems { get;set;}
         public DbSet<Category> Categories { get;set;}
+        public DbSet<Review> Reviews { get;set;}
     }
 }

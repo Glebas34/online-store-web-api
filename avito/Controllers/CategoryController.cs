@@ -76,6 +76,8 @@ namespace avito.Controllers
 
         [HttpPut("{сategoryId}")]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(204)]
         public IActionResult UpdateCategory(int сategoryId, [FromBody] CategoryDto updatedCategory)
         {
             if (updatedCategory == null)

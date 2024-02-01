@@ -20,6 +20,7 @@ namespace avito.Controllers
             _appUserRepository = appUserRepository;
             _mapper = mapper;
         }
+
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(ShoppingCartDto))]
         [ProducesResponseType(400)]
@@ -94,6 +95,8 @@ namespace avito.Controllers
 
         [HttpPut("{shoppingCartId}")]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(204)]
         public IActionResult UpdateShoppingCart(int shoppingCartId, [FromBody] ShoppingCartDto updatedShoppingCart)
         {
             if (updatedShoppingCart == null)

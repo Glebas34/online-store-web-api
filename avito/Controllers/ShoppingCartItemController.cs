@@ -82,6 +82,8 @@ namespace avito.Controllers
 
         [HttpPut("{shoppingCartItemId}")]
         [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(204)]
         public IActionResult UpdateShoppingCartItem(int shoppingCartItemId, [FromBody] ShoppingCartItemDto updatedShoppingCartItem)
         {
             if (updatedShoppingCartItem == null)
