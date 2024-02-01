@@ -35,6 +35,17 @@ namespace avito.Repository
             return await _context.ShoppingCarts.ToListAsync();
         }
 
+        public async Task<decimal> GetTotalPrice(int id)
+        {
+            decimal total = 0;
+            var shoppingCart = await _context.ShoppingCarts.FindAsync(id);
+            foreach(var item in shoppingCart.ShoppingCartItems)
+            {
+                total += item.Price;
+            }
+            return total;
+        }
+
         public bool Save()
         {
             var saved = _context.SaveChanges();

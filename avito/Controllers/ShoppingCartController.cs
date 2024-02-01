@@ -50,6 +50,23 @@ namespace avito.Controllers
             return Ok(shoppingCarts);
         }
 
+        [HttpGet]
+        [ProducesResponseType(200, Type = typeof(decimal))]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetTotalPrice(int id)
+        {
+            if (!_shoppingCartRepository.ShoppingCartExists(id))
+            {
+                return NotFound();
+            }
+            var totalSum = await _shoppingCartRepository.GetTotalPrice(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            return Ok(totalSum);
+        }
+
         [HttpPost("{shoppingCartCreate}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]

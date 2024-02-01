@@ -11,5 +11,6 @@ namespace avito.Interfaces
         bool UpdateShoppingCart(ShoppingCart shoppingCart);
         bool Save();
         bool ShoppingCartExists(int id);
+        public Task<decimal> GetTotalPrice(int id);
     }
 }
