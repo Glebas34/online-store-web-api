@@ -72,7 +72,7 @@ namespace avito.Controllers
             var product = await _productRepository.GetProduct(productId);
             shoppingCartItemMap.Product = product;
             shoppingCartItemMap.ShoppingCart = shoppingCart;
-            if (!_shoppingCartItemRepository.CreateShoppingCartItem(shoppingCartId,shoppingCartItemMap))
+            if (!_shoppingCartItemRepository.CreateShoppingCartItem(shoppingCartItemMap))
             {
                 ModelState.AddModelError("", "Что-то пошло не так при сохранении");
                 return StatusCode(500, ModelState);

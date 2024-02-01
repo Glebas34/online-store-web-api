@@ -12,6 +12,7 @@ namespace avito.Repository
         {
             _context = context;
         }
+
         public bool CreateShoppingCart(ShoppingCart shoppingCart)
         {
             _context.Add(shoppingCart);

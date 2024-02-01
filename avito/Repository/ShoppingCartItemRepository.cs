@@ -14,14 +14,8 @@ namespace avito.Repository
         }
 
 
-        public bool CreateShoppingCartItem(int shoppingCartId,ShoppingCartItem shoppingCartItem)
+        public bool CreateShoppingCartItem(ShoppingCartItem shoppingCartItem)
         {
-            var shoppingCart = _context.ShoppingCarts.Find(shoppingCartId);
-            var shoppingCartItemShoppingCart = new ShoppingCartItemShoppingCart {
-                ShoppingCart = shoppingCart,
-                ShoppingCartItem = shoppingCartItem,
-            };
-            _context.Add(shoppingCartItemShoppingCart);
             _context.Add(shoppingCartItem);
             return Save();
         }
