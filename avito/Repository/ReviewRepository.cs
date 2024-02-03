@@ -18,9 +18,8 @@ namespace avito.Repository
             return Save();
         }
 
-        public bool DeleteReview(int id)
+        public bool DeleteReview(Review review)
         {
-            var review = _context.Reviews.Find(id);
             _context.Remove(review);
             return Save();
         }

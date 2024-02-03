@@ -8,7 +8,7 @@ namespace avito.Interfaces
         Task<Review> GetReview(int id);
         bool CreateReview(Review review);
         bool UpdateReview(Review review);
-        bool DeleteReview(int id);
+        bool DeleteReview(Review review);
         bool Save();
         bool DeleteReviews(List<Review> reviews);
         bool ReviewExists(int id);

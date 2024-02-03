@@ -64,7 +64,7 @@ namespace avito.Controllers
             }
             if (!_shoppingCartItemRepository.ShoppingCartItemExists(shoppingCartItemCreate.Id))
             {
-                ModelState.AddModelError("", "Объявление уже существует");
+                ModelState.AddModelError("", "Товар с таким id уже существует");
                 return StatusCode(422, ModelState);
             }
             var shoppingCartItemMap = _mapper.Map<ShoppingCartItem>(shoppingCartItemCreate);

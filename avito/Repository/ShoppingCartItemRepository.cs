@@ -27,6 +27,12 @@ namespace avito.Repository
             return Save();
         }
 
+        public bool DeleteShoppingCartItems(List<ShoppingCartItem> items)
+        {
+            _context.RemoveRange(items);
+            return Save();
+        }
+
         async public Task<ShoppingCartItem> GetShoppingCartItem(int id)
         {
             return await _context.ShoppingCartItems.FindAsync(id);
@@ -45,7 +51,7 @@ namespace avito.Repository
 
         public bool ShoppingCartItemExists(int id)
         {
-            throw new NotImplementedException();
+            return _context.ShoppingCartItems.Any(x => x.Id == id);
         }
 
         public bool UpdateShoppingCartItem(ShoppingCartItem shoppingCartItem)

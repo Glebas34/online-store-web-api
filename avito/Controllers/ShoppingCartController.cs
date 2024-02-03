@@ -12,13 +12,15 @@ namespace avito.Controllers
     public class ShoppingCartController : ControllerBase
     {
         private readonly IShoppingCartRepository _shoppingCartRepository;
+        private readonly IShoppingCartItemRepository _shoppingCartItemRepository;
         private readonly IAppUserRepository _appUserRepository;
         private readonly IMapper _mapper;
-        public ShoppingCartController(IShoppingCartRepository shoppingCartRepository, IAppUserRepository appUserRepository, IMapper mapper)
+        public ShoppingCartController(IShoppingCartRepository shoppingCartRepository, IAppUserRepository appUserRepository, IMapper mapper, IShoppingCartItemRepository shoppingCartItemRepository)
         {
             _shoppingCartRepository = shoppingCartRepository;
             _appUserRepository = appUserRepository;
             _mapper = mapper;
+            _shoppingCartItemRepository = shoppingCartItemRepository;
         }
 
         [HttpGet("{id}")]
@@ -79,11 +81,16 @@ namespace avito.Controllers
             }
             if (!_shoppingCartRepository.ShoppingCartExists(shoppingCartCreate.Id))
             {
-                ModelState.AddModelError("", "Объявление уже существует");
+                ModelState.AddModelError("", "Корзина с таким id уже существует");
+                return StatusCode(422, ModelState);
+            }
+            var appUser = await _appUserRepository.GetAppUserById(userId);
+            if (appUser.ShoppingCart != null)
+            {
+                ModelState.AddModelError("", $"У пользователя с id {userId} уже есть корзина");
                 return StatusCode(422, ModelState);
             }
             var shoppingCartMap = _mapper.Map<ShoppingCart>(shoppingCartCreate);
-            var appUser = await _appUserRepository.GetAppUserById(userId);
             shoppingCartMap.User = appUser;
             if (!_shoppingCartRepository.CreateShoppingCart(shoppingCartMap))
             {
@@ -128,7 +135,7 @@ namespace avito.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> DeleteshoppingCart(int shoppingCartId)
+        public async Task<IActionResult> DeleteShoppingCart(int shoppingCartId)
         {
             if (!_shoppingCartRepository.ShoppingCartExists(shoppingCartId))
             {
@@ -138,6 +145,11 @@ namespace avito.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+            var itemsToDelete = shoppingCartToDelete.ShoppingCartItems.ToList();
+            if (!_shoppingCartItemRepository.DeleteShoppingCartItems(itemsToDelete))
+            {
+                ModelState.AddModelError("","Что-то пошло не так при удалении предметов из корзины");
             }
             if (!_shoppingCartRepository.DeleteShoppingCart(shoppingCartToDelete))
             {

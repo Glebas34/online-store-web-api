@@ -11,5 +11,6 @@ namespace avito.Interfaces
         bool UpdateShoppingCartItem(ShoppingCartItem shoppingCartItem);
         bool Save();
         bool ShoppingCartItemExists(int id);
+        bool DeleteShoppingCartItems(List<ShoppingCartItem> items);
     }
 }
