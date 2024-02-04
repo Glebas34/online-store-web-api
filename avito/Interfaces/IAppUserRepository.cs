@@ -16,6 +16,7 @@ namespace avito.Interfaces
         public bool Update(AppUser user);
         public bool AppUserExists(int id);
         public bool DeleteAppUser(AppUser appUser);
+        public bool UpdateAppUser(AppUser appUser);
         
 
     }

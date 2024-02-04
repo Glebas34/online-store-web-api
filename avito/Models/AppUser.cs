@@ -13,5 +13,6 @@ namespace avito.Models
         [ForeignKey(nameof(ShoppingCart))]
         public int? ShoppingCartId { get; set; } 
         public ShoppingCart? ShoppingCart { get; set;}
+        public ICollection<Review> reviews { get; set; }
     }
 }

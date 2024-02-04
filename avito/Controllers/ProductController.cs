@@ -16,23 +16,24 @@ namespace avito.Controllers
         private readonly ICategoryRepository _categoryRepository;
         private readonly IReviewRepository _reviewRepository;
         private readonly IMapper _mapper;
-        public ProductController(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper)
+        public ProductController(IProductRepository productRepository, ICategoryRepository categoryRepository, IReviewRepository reviewRepository, IMapper mapper)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
+            _reviewRepository = reviewRepository;
             _mapper = mapper;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{productId:int}")]
         [ProducesResponseType(200, Type = typeof(ProductDto))]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetProduct(int id)
+        public async Task<IActionResult> GetProduct(int productId)
         {
-            if (_productRepository.ProductExists(id))
+            if (_productRepository.ProductExists(productId))
             {
                 return NotFound();
             }
-            var product = _mapper.Map<ProductDto>(await _productRepository.GetProduct(id));
+            var product = _mapper.Map<ProductDto>(await _productRepository.GetProduct(productId));
             if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -52,16 +53,16 @@ namespace avito.Controllers
             return Ok(products);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{productId:int}/rating")]
         [ProducesResponseType(200, Type = typeof(decimal))]
         [ProducesResponseType(400)]
-        public IActionResult GetProductRating(int id)
+        public IActionResult GetProductRating(int productId)
         {
-            if (_productRepository.ProductExists(id))
+            if (_productRepository.ProductExists(productId))
             {
                 return NotFound();
             }
-            var rating = _productRepository.GetProductRating(id);
+            var rating = _productRepository.GetProductRating(productId);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -69,7 +70,7 @@ namespace avito.Controllers
             return Ok(rating);
         }
 
-        [HttpPost("{productCreate}")]
+        [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> CreateProduct([FromQuery] int catId, [FromBody] ProductDto productCreate) {
@@ -93,7 +94,7 @@ namespace avito.Controllers
             return Ok("Успешно создано");
         }
 
-        [HttpPut("{productId}")]
+        [HttpPut("{productId:int}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
@@ -122,7 +123,7 @@ namespace avito.Controllers
             return Ok("Успешно обновлено");
         }
 
-        [HttpDelete("{productId}")]
+        [HttpDelete("{productId:int}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]

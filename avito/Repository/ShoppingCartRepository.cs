@@ -21,6 +21,7 @@ namespace avito.Repository
 
         public bool DeleteShoppingCart(ShoppingCart shoppingCart)
         {
+            _context.RemoveRange(shoppingCart.ShoppingCartItems);
             _context.Remove(shoppingCart);
             return Save();
         }

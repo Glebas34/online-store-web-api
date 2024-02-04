@@ -24,16 +24,16 @@ namespace avito.Controllers
             _appUserRepository = appUserRepository;
             _productRepository = productRepository;
         }
-        [HttpGet("{id}")]
+        [HttpGet("{reviewId:int}")]
         [ProducesResponseType(200, Type = typeof(ReviewDto))]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetReview(int id)
+        public async Task<IActionResult> GetReview(int reviewId)
         {
-            if (_reviewRepository.ReviewExists(id))
+            if (_reviewRepository.ReviewExists(reviewId))
             {
                 return NotFound();
             }
-            var review = _mapper.Map<ReviewDto > (await _reviewRepository.GetReview(id));
+            var review = _mapper.Map<ReviewDto > (await _reviewRepository.GetReview(reviewId));
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -54,7 +54,7 @@ namespace avito.Controllers
             return Ok(reviews);
         }
 
-        [HttpPost("{productCreate}")]
+        [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> CreateReview([FromQuery] int productId, [FromQuery] int reviewerId, [FromBody] ReviewDto reviewCreate)
@@ -81,7 +81,7 @@ namespace avito.Controllers
             return Ok("Успешно создано");
         }
 
-        [HttpPut("{reviewId}")]
+        [HttpPut("{reviewId:int}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
@@ -112,7 +112,7 @@ namespace avito.Controllers
             return Ok("Успешно обновлено");
         }
 
-        [HttpDelete("{reviewId}")]
+        [HttpDelete("{reviewId:int}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]

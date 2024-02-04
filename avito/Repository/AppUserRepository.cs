@@ -51,5 +51,11 @@ namespace avito.Repository
             _context.Remove(appUser);
             return Save();
         }
+
+        public bool UpdateAppUser(AppUser appUser)
+        {
+            _context.Update(appUser);
+            return Save();
+        }
     }
 }

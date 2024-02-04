@@ -20,7 +20,7 @@ namespace avito.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{catId}")]
+        [HttpGet("{catId:int}")]
         [ProducesResponseType(200, Type = typeof(CategoryDto))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetCategory(int catId)
@@ -53,7 +53,7 @@ namespace avito.Controllers
             return Ok(categories);
         }
 
-        [HttpPost("{catCreate}")]
+        [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public IActionResult CreateCategory(CategoryDto catCreate) {
@@ -74,7 +74,7 @@ namespace avito.Controllers
             return Ok("Успешно создано");
         }
 
-        [HttpPut("{сategoryId}")]
+        [HttpPut("{сategoryId:int}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
@@ -105,7 +105,7 @@ namespace avito.Controllers
             return Ok("Успешно обновлено");
         }
 
-        [HttpDelete("{categoryId}")]
+        [HttpDelete("{categoryId:int}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]

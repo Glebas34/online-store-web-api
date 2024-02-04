@@ -14,20 +14,22 @@ namespace avito.Controllers
     public class AppUserController : ControllerBase
     {
         private readonly IAppUserRepository _appUserRepository;
+        private readonly IShoppingCartRepository _shoppingCartRepository;
         private readonly IMapper _mapper;
-        public AppUserController(IAppUserRepository appUserRepository, IMapper mapper) {
+        public AppUserController(IAppUserRepository appUserRepository, IShoppingCartRepository shoppingCartRepository, IMapper mapper) {
             _appUserRepository = appUserRepository;
+            _shoppingCartRepository = shoppingCartRepository;
             _mapper = mapper;
         }
 
-        [HttpGet("{userId}")]
+        [HttpGet("{appUserId:int}")]
         [ProducesResponseType(200, Type = typeof(AppUserDto))]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetAppUser(int userId) {
-            if (!_appUserRepository.AppUserExists(userId)) {
+        public async Task<IActionResult> GetAppUser(int appUserId) {
+            if (!_appUserRepository.AppUserExists(appUserId)) {
                 NotFound();
             }
-            var user = _mapper.Map<AppUserDto>(await _appUserRepository.GetAppUserById(userId));
+            var user = _mapper.Map<AppUserDto>(await _appUserRepository.GetAppUserById(appUserId));
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -48,7 +50,7 @@ namespace avito.Controllers
             return Ok(users);
         }
 
-        [HttpPost("{appUserCreate}")]
+        [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> CreateAppUser([FromBody] AppUserDto appUserDto)
@@ -71,7 +73,38 @@ namespace avito.Controllers
             return Ok("Успешно создано");
         }
 
-        [HttpDelete("{appUserId}")]
+        [HttpPut("{appUserId:int}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(204)]
+        public IActionResult UpdateProduct(int appUserId, [FromBody] AppUserDto updatedAppUser)
+        {
+            if (updatedAppUser == null)
+            {
+                return BadRequest(ModelState);
+            }
+            if (appUserId != updatedAppUser.Id)
+            {
+                return BadRequest(ModelState);
+            }
+            if (_appUserRepository.AppUserExists(appUserId))
+            {
+                return NotFound();
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            var appUserMap = _mapper.Map<AppUser>(updatedAppUser);
+            if (!_appUserRepository.UpdateAppUser(appUserMap))
+            {
+                ModelState.AddModelError("", "Что-то пошло не так при сохранении");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Успешно обновлено");
+        }
+
+        [HttpDelete("{appUserId:int}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
@@ -85,6 +118,12 @@ namespace avito.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+            var shoppingCartToDelete = appUserToDelete.ShoppingCart;
+            if (!_shoppingCartRepository.DeleteShoppingCart(shoppingCartToDelete))
+            {
+                ModelState.AddModelError("", "Что-то пошло не так при удалении");
+                return StatusCode(500, ModelState);
             }
             if (!_appUserRepository.DeleteAppUser(appUserToDelete))
             {

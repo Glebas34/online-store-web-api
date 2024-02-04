@@ -23,16 +23,16 @@ namespace avito.Controllers
             _shoppingCartItemRepository = shoppingCartItemRepository;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{shoppingCartId:int}")]
         [ProducesResponseType(200, Type = typeof(ShoppingCartDto))]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetShoppingCart(int id)
+        public async Task<IActionResult> GetShoppingCart(int shoppingCartId)
         {
-            if (_shoppingCartRepository.ShoppingCartExists(id))
+            if (_shoppingCartRepository.ShoppingCartExists(shoppingCartId))
             {
                 return NotFound();
             }
-            var shoppingCart = _mapper.Map<ShoppingCartDto>(await _shoppingCartRepository.GetShoppingCart(id));
+            var shoppingCart = _mapper.Map<ShoppingCartDto>(await _shoppingCartRepository.GetShoppingCart(shoppingCartId));
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -53,16 +53,16 @@ namespace avito.Controllers
             return Ok(shoppingCarts);
         }
 
-        [HttpGet]
+        [HttpGet("{shoppingCartId:int}/TotalPrice")]
         [ProducesResponseType(200, Type = typeof(decimal))]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetTotalPrice(int id)
+        public async Task<IActionResult> GetTotalPrice(int shoppingCartId)
         {
-            if (!_shoppingCartRepository.ShoppingCartExists(id))
+            if (!_shoppingCartRepository.ShoppingCartExists(shoppingCartId))
             {
                 return NotFound();
             }
-            var totalSum = await _shoppingCartRepository.GetTotalPrice(id);
+            var totalSum = await _shoppingCartRepository.GetTotalPrice(shoppingCartId);
             if (!ModelState.IsValid)
             {
                 return BadRequest();
@@ -70,10 +70,10 @@ namespace avito.Controllers
             return Ok(totalSum);
         }
 
-        [HttpPost("{shoppingCartCreate}")]
+        [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> CreateShoppingCart([FromQuery] int userId, [FromBody] ProductDto shoppingCartCreate)
+        public async Task<IActionResult> CreateShoppingCart([FromQuery] int userId, [FromBody] ShoppingCartDto shoppingCartCreate)
         {
             if (shoppingCartCreate == null)
             {
@@ -100,7 +100,7 @@ namespace avito.Controllers
             return Ok("Успешно создано");
         }
 
-        [HttpPut("{shoppingCartId}")]
+        [HttpPut("{shoppingCartId:int}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
@@ -131,7 +131,7 @@ namespace avito.Controllers
             return Ok("Успешно обновлено");
         }
 
-        [HttpDelete("{shoppingCartId}")]
+        [HttpDelete("{shoppingCartId:int}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
