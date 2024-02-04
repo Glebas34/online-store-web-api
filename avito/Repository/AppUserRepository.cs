@@ -9,26 +9,24 @@ namespace avito.Repository
     public class AppUserRepository: IAppUserRepository
     {
         private readonly AppDbContext _context;
-        private readonly UserManager<AppUser> _userManager;
-        public AppUserRepository(AppDbContext context, UserManager<AppUser> userManager)
+        public AppUserRepository(AppDbContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
         async public Task<List<AppUser>> GetAllAppUsers()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.AppUsers.ToListAsync();
         }
 
-        public async Task<AppUser> GetAppUserById(string id)
+        public async Task<AppUser> GetAppUserById(int id)
         {
-            return await _context.Users.FindAsync(id);
+            return await _context.AppUsers.FindAsync(id);
         }
 
-        public async Task<bool> CreateAppUser(string password, AppUser user) {
-            var result = await _userManager.CreateAsync(new AppUser() { UserName = user.UserName, Email = user.Email }, password);
-            return result.Succeeded;
+        public bool CreateAppUser(AppUser user) {
+            _context.Add(user);
+            return Save();
         }
 
         public bool Save()
@@ -39,19 +37,19 @@ namespace avito.Repository
 
         public bool Update(AppUser user)
         {
-            _context.Users.Update(user);
+            _context.AppUsers.Update(user);
             return Save();
         }
 
-        public async Task<bool> AppUserExists(string id)
+        public bool AppUserExists(int id)
         {
-            var result = await _userManager.FindByIdAsync(id);
-            return result!=null;
+            return _context.AppUsers.Any(p=>p.Id==id);
         }
-        public async Task<bool> DeleteAppUser(AppUser appUser)
+        public bool DeleteAppUser(AppUser appUser)
         {
-            var result = await _userManager.DeleteAsync(appUser);
-            return result.Succeeded;
+
+            _context.Remove(appUser);
+            return Save();
         }
     }
 }

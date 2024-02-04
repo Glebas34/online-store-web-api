@@ -13,14 +13,13 @@ namespace avito.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
-        private readonly ICategoryRepository _categoryRepository; 
-        private readonly IAppUserRepository _appUserRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IReviewRepository _reviewRepository;
         private readonly IMapper _mapper;
-        public ProductController(IProductRepository productRepository, ICategoryRepository categoryRepository, IAppUserRepository appUserRepository, IMapper mapper)
+        public ProductController(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
-            _appUserRepository = appUserRepository;
             _mapper = mapper;
         }
         [HttpGet("{id}")]
@@ -55,7 +54,7 @@ namespace avito.Controllers
         [HttpPost("{productCreate}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> CreateProduct([FromQuery] int catId,[FromQuery] string sellerId, [FromBody] ProductDto productCreate) {
+        public async Task<IActionResult> CreateProduct([FromQuery] int catId, [FromBody] ProductDto productCreate) {
             if(productCreate == null)
             {
                 return BadRequest(ModelState);
@@ -67,8 +66,6 @@ namespace avito.Controllers
             }
             var productMap = _mapper.Map<Product>(productCreate);
             var category = await _categoryRepository.GetCategory(catId);
-            var seller = await _appUserRepository.GetAppUserById(sellerId);
-            productMap.Seller = seller;
             productMap.Category = category;
             if (!_productRepository.CreateProduct(productMap))
             {
@@ -117,11 +114,17 @@ namespace avito.Controllers
                 return NotFound();
             }
             var productToDelete = await _productRepository.GetProduct(productId);
+            var reviewsToDelete = productToDelete.Reviews.ToList();
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            if(!_productRepository.DeleteProduct(productToDelete)) {
+            if (!_reviewRepository.DeleteReviews(reviewsToDelete))
+            {
+                ModelState.AddModelError("", "Что-то пошло не так при удалении отзывов");
+                return StatusCode(500, ModelState);
+            }
+            if (!_productRepository.DeleteProduct(productToDelete)) {
                 ModelState.AddModelError("", "Что-то пошло не так при удалении");
                 return StatusCode(500, ModelState);
             }

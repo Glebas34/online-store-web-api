@@ -73,7 +73,7 @@ namespace avito.Controllers
         [HttpPost("{shoppingCartCreate}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> CreateShoppingCart([FromQuery] string userId, [FromBody] ProductDto shoppingCartCreate)
+        public async Task<IActionResult> CreateShoppingCart([FromQuery] int userId, [FromBody] ProductDto shoppingCartCreate)
         {
             if (shoppingCartCreate == null)
             {

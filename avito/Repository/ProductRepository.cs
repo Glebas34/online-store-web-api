@@ -42,12 +42,6 @@ namespace avito.Repository
             return await _context.Products.ToListAsync();
         }
 
-        public async Task<List<Product>> GetProductsOfUser(string appUserId)
-        {
-            var products = await _context.Products.Where(p => p.Seller.Id == appUserId).ToListAsync();
-            return products;
-        }
-
         public bool ProductExists(int id)
         {
             return _context.Products.Any(p => p.Id == id);

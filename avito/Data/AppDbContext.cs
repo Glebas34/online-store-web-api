@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace avito.Data
 {
-    public class AppDbContext : IdentityDbContext<AppUser>
+    public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        public AppDbContext(DbContextOptions options) : base(options)
         {
 
         }
@@ -16,5 +16,6 @@ namespace avito.Data
         public DbSet<ShoppingCartItem> ShoppingCartItems { get;set;}
         public DbSet<Category> Categories { get;set;}
         public DbSet<Review> Reviews { get;set;}
+        public DbSet<AppUser> AppUsers { get;set;}
     }
 }

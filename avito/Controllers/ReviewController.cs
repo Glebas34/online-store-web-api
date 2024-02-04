@@ -57,7 +57,7 @@ namespace avito.Controllers
         [HttpPost("{productCreate}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> CreateReview([FromQuery] int productId, [FromQuery] string reviewerId, [FromBody] ReviewDto reviewCreate)
+        public async Task<IActionResult> CreateReview([FromQuery] int productId, [FromQuery] int reviewerId, [FromBody] ReviewDto reviewCreate)
         {
             if (reviewCreate == null)
             {
