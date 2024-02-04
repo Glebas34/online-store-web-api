@@ -13,5 +13,6 @@ namespace avito.Interfaces
         bool Save();
         bool ProductExists(int id);
         bool DeleteProducts(List<Product> products);
+        decimal GetProductRating(int id);
     }
 }

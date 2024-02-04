@@ -37,6 +37,18 @@ namespace avito.Repository
             return await _context.Products.FindAsync(id);
         }
 
+        public decimal GetProductRating(int id)
+        {
+            var product = _context.Products.Find(id);
+            var reviews = product.Reviews;
+            decimal sum = 0;
+            foreach(var review in reviews)
+            {
+                sum += review.Rating;
+            }
+            return sum/reviews.Count();
+        }
+
         async public Task<List<Product>> GetProducts()
         {
             return await _context.Products.ToListAsync();

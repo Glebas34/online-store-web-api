@@ -22,6 +22,7 @@ namespace avito.Controllers
             _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
+
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(ProductDto))]
         [ProducesResponseType(400)]
@@ -49,6 +50,23 @@ namespace avito.Controllers
                 return BadRequest(ModelState);
             }
             return Ok(products);
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(200, Type = typeof(decimal))]
+        [ProducesResponseType(400)]
+        public IActionResult GetProductRating(int id)
+        {
+            if (_productRepository.ProductExists(id))
+            {
+                return NotFound();
+            }
+            var rating = _productRepository.GetProductRating(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            return Ok(rating);
         }
 
         [HttpPost("{productCreate}")]
