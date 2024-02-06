@@ -2,7 +2,6 @@
 using avito.Dto;
 using avito.Interfaces;
 using avito.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace avito.Controllers

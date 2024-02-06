@@ -58,7 +58,7 @@ namespace avito.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetProductRating(int productId)
         {
-            if (_productRepository.ProductExists(productId))
+            if (!_productRepository.ProductExists(productId))
             {
                 return NotFound();
             }
@@ -78,7 +78,7 @@ namespace avito.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (!_productRepository.ProductExists(productCreate.Id))
+            if (_productRepository.ProductExists(productCreate.Id))
             {
                 ModelState.AddModelError("", "Объявление уже существует");
                 return StatusCode(422, ModelState);

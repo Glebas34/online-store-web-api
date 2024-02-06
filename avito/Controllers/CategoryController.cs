@@ -60,7 +60,7 @@ namespace avito.Controllers
             if(catCreate == null) {
                 return BadRequest(ModelState);
             }
-            if(!_categoryRepository.CategoryExists(catCreate.Id))
+            if(_categoryRepository.CategoryExists(catCreate.Id))
             {
                 ModelState.AddModelError("", "Категория уже существует");
                 return StatusCode(422, ModelState);
@@ -88,7 +88,7 @@ namespace avito.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (_categoryRepository.CategoryExists(сategoryId))
+            if (!_categoryRepository.CategoryExists(сategoryId))
             {
                 return NotFound();
             }

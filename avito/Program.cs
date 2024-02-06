@@ -1,9 +1,6 @@
 using avito.Data;
 using avito.Interfaces;
-using avito.Models;
 using avito.Repository;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
