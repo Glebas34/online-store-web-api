@@ -65,7 +65,7 @@ namespace avito.Controllers
                 return StatusCode(422, ModelState);
             }
             var appUserMap = _mapper.Map<AppUser>(appUserDto);
-            if (_appUserRepository.CreateAppUser(appUserMap))
+            if (!_appUserRepository.CreateAppUser(appUserMap))
             {
                 ModelState.AddModelError("", "Что-то пошло не так при сохранении");
                 return StatusCode(500, ModelState);
@@ -120,10 +120,13 @@ namespace avito.Controllers
                 return BadRequest(ModelState);
             }
             var shoppingCartToDelete = appUserToDelete.ShoppingCart;
-            if (!_shoppingCartRepository.DeleteShoppingCart(shoppingCartToDelete))
+            if (shoppingCartToDelete != null)
             {
-                ModelState.AddModelError("", "Что-то пошло не так при удалении");
-                return StatusCode(500, ModelState);
+                if (!_shoppingCartRepository.DeleteShoppingCart(shoppingCartToDelete))
+                {
+                    ModelState.AddModelError("", "Что-то пошло не так при удалении");
+                    return StatusCode(500, ModelState);
+                }
             }
             if (!_appUserRepository.DeleteAppUser(appUserToDelete))
             {
