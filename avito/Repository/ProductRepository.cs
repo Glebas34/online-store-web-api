@@ -42,11 +42,15 @@ namespace avito.Repository
             var product = _context.Products.Find(id);
             var reviews = product.Reviews;
             decimal sum = 0;
-            foreach(var review in reviews)
+            if (reviews != null)
             {
-                sum += review.Rating;
+                foreach (var review in reviews)
+                {
+                    sum += review.Rating;
+                }
+                return sum / reviews.Count();
             }
-            return sum/reviews.Count();
+            return 0;
         }
 
         async public Task<List<Product>> GetProducts()

@@ -29,7 +29,7 @@ namespace avito.Controllers
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetProduct(int productId)
         {
-            if (_productRepository.ProductExists(productId))
+            if (!_productRepository.ProductExists(productId))
             {
                 return NotFound();
             }

@@ -39,13 +39,9 @@ namespace avito.Controllers
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<CategoryDto>))]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetCategories(int catId)
+        public async Task<IActionResult> GetCategories()
         {
-            if (!_categoryRepository.CategoryExists(catId))
-            {
-                return NotFound();
-            }
-            var categories = _mapper.Map<CategoryDto>(await _categoryRepository.GetCategories());
+            var categories = _mapper.Map<List<CategoryDto>>(await _categoryRepository.GetCategories());
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

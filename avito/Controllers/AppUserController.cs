@@ -84,7 +84,7 @@ namespace avito.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (_appUserRepository.AppUserExists(appUserId))
+            if (!_appUserRepository.AppUserExists(appUserId))
             {
                 return NotFound();
             }
