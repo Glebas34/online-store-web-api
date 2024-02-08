@@ -147,9 +147,9 @@ namespace avito.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var itemsToDelete = shoppingCartToDelete.ShoppingCartItems;
+            var itemsToDelete = await _shoppingCartItemRepository.GetItemsOfShoppingCart(shoppingCartId);
             if (itemsToDelete != null) { 
-                if (!_shoppingCartItemRepository.DeleteShoppingCartItems(itemsToDelete.ToList()))
+                if (!_shoppingCartItemRepository.DeleteShoppingCartItems(itemsToDelete))
                 {
                     ModelState.AddModelError("", "Что-то пошло не так при удалении предметов из корзины");
                 } 

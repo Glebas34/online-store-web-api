@@ -40,6 +40,11 @@ namespace avito.Repository
             return await _context.Reviews.ToListAsync();
         }
 
+        public async Task<List<Review>> GetReviewsOfProduct(int productId)
+        {
+            return await _context.Reviews.Where(r=>r.ProductId==productId).ToListAsync();
+        }
+
         public bool ReviewExists(int id)
         {
             return _context.Reviews.Any(p => p.Id == id);

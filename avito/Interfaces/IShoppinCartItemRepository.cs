@@ -6,6 +6,8 @@ namespace avito.Interfaces
     {
         Task<List<ShoppingCartItem>> GetShoppingCartItems();
         Task<ShoppingCartItem> GetShoppingCartItem(int id);
+        Task<List<ShoppingCartItem>> GetShoppingCartItemsOfProduct(int productId);
+        Task<List<ShoppingCartItem>> GetItemsOfShoppingCart(int shoppingCartId);
         bool DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem);
         bool CreateShoppingCartItem(ShoppingCartItem shoppingCartItem);
         bool UpdateShoppingCartItem(ShoppingCartItem shoppingCartItem);

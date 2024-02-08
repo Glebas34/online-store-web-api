@@ -15,12 +15,14 @@ namespace avito.Controllers
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IReviewRepository _reviewRepository;
+        private readonly IShoppingCartItemRepository _shoppingCartItemRepository;
         private readonly IMapper _mapper;
-        public ProductController(IProductRepository productRepository, ICategoryRepository categoryRepository, IReviewRepository reviewRepository, IMapper mapper)
+        public ProductController(IProductRepository productRepository, ICategoryRepository categoryRepository, IReviewRepository reviewRepository, IShoppingCartItemRepository shoppingCartItemRepository, IMapper mapper)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
             _reviewRepository = reviewRepository;
+            _shoppingCartItemRepository = shoppingCartItemRepository;
             _mapper = mapper;
         }
 
@@ -133,10 +135,16 @@ namespace avito.Controllers
                 return NotFound();
             }
             var productToDelete = await _productRepository.GetProduct(productId);
-            var reviewsToDelete = productToDelete.Reviews.ToList();
+            var reviewsToDelete = await _reviewRepository.GetReviewsOfProduct(productId);
+            var itemsToDelete = await _shoppingCartItemRepository.GetShoppingCartItemsOfProduct(productId); 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+            if (!_shoppingCartItemRepository.DeleteShoppingCartItems(itemsToDelete))
+            {
+                ModelState.AddModelError("", "Что-то пошло не так при удалении товаров из корзины");
+                return StatusCode(500, ModelState);
             }
             if (!_reviewRepository.DeleteReviews(reviewsToDelete))
             {

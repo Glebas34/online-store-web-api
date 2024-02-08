@@ -43,6 +43,16 @@ namespace avito.Repository
             return await _context.ShoppingCartItems.ToListAsync();
         }
 
+        public async Task<List<ShoppingCartItem>> GetShoppingCartItemsOfProduct(int productId) 
+        {
+            return await _context.ShoppingCartItems.Where(i=>i.ProductId == productId).ToListAsync();
+        }
+
+        public async Task<List<ShoppingCartItem>> GetItemsOfShoppingCart(int shoppingCartId)
+        {
+            return await _context.ShoppingCartItems.Where(i => i.ShoppingCartId == shoppingCartId).ToListAsync();
+        }
+
         public bool Save()
         {
             var saved = _context.SaveChanges();
