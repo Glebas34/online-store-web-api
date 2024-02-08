@@ -107,7 +107,7 @@ namespace avito.Controllers
             if(productId!=updatedProduct.Id) {
                 return BadRequest(ModelState);
             }
-            if(_productRepository.ProductExists(productId))
+            if(!_productRepository.ProductExists(productId))
             {
                 return NotFound();
             }

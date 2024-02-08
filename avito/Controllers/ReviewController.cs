@@ -27,7 +27,7 @@ namespace avito.Controllers
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetReview(int reviewId)
         {
-            if (_reviewRepository.ReviewExists(reviewId))
+            if (!_reviewRepository.ReviewExists(reviewId))
             {
                 return NotFound();
             }
@@ -61,9 +61,9 @@ namespace avito.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (!_reviewRepository.ReviewExists(reviewCreate.Id))
+            if (_reviewRepository.ReviewExists(reviewCreate.Id))
             {
-                ModelState.AddModelError("", "Объявление уже существует");
+                ModelState.AddModelError("", "Отзыв с таким id уже существует");
                 return StatusCode(422, ModelState);
             }
             var reviewMap = _mapper.Map<Review>(reviewCreate);
@@ -83,7 +83,7 @@ namespace avito.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
-        public IActionResult UpdateReview(int reviewId, [FromBody] ReviewDto updatedReview)
+        public IActionResult UpdateReview(int reviewId,[FromQuery] int productId,[FromQuery] int reviewerId, [FromBody] ReviewDto updatedReview)
         {
             if (updatedReview == null)
             {
@@ -93,7 +93,7 @@ namespace avito.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (_reviewRepository.ReviewExists(reviewId))
+            if (!_reviewRepository.ReviewExists(reviewId))
             {
                 return NotFound();
             }
@@ -102,6 +102,8 @@ namespace avito.Controllers
                 return BadRequest();
             }
             var reviewMap = _mapper.Map<Review>(updatedReview);
+            reviewMap.ProductId = productId;
+            reviewMap.ReviewerId = reviewerId;
             if (!_reviewRepository.UpdateReview(reviewMap))
             {
                 ModelState.AddModelError("", "Что-то пошло не так при сохранении");
