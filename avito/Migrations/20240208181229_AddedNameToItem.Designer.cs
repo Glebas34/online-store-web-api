@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using avito.Data;
@@ -11,9 +12,11 @@ using avito.Data;
 namespace avito.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240208181229_AddedNameToItem")]
+    partial class AddedNameToItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -232,7 +235,7 @@ namespace avito.Migrations
             modelBuilder.Entity("avito.Models.ShoppingCartItem", b =>
                 {
                     b.HasOne("avito.Models.Product", "Product")
-                        .WithMany("ShoppingCartItems")
+                        .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -256,8 +259,6 @@ namespace avito.Migrations
             modelBuilder.Entity("avito.Models.Product", b =>
                 {
                     b.Navigation("Reviews");
-
-                    b.Navigation("ShoppingCartItems");
                 });
 
             modelBuilder.Entity("avito.Models.ShoppingCart", b =>
