@@ -51,7 +51,7 @@ namespace avito.Controllers
             return Ok(shoppingCartItems);
         }
 
-        [HttpPost("{productCreate}")]
+        [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> CreateShoppingCartItem([FromQuery] int shoppingCartId, [FromQuery] int productId, [FromBody] ShoppingCartItemDto shoppingCartItemCreate)
@@ -60,7 +60,7 @@ namespace avito.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (!_shoppingCartItemRepository.ShoppingCartItemExists(shoppingCartItemCreate.Id))
+            if (_shoppingCartItemRepository.ShoppingCartItemExists(shoppingCartItemCreate.Id))
             {
                 ModelState.AddModelError("", "Товар с таким id уже существует");
                 return StatusCode(422, ModelState);
