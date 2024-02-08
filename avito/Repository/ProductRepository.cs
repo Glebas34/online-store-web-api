@@ -62,6 +62,11 @@ namespace avito.Repository
         {
             return _context.Products.Any(p => p.Id == id);
         }
+        
+        public bool ProductExists(int id, string name, decimal price)
+        {
+            return _context.Products.Any(p => p.Id == id&&p.Name==name&&p.Price==price);
+        }
 
         public bool Save()
         {

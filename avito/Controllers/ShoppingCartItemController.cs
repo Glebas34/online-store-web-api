@@ -26,7 +26,7 @@ namespace avito.Controllers
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetShoppingCartItem(int id)
         {
-            if (_shoppingCartItemRepository.ShoppingCartItemExists(id))
+            if (!_shoppingCartItemRepository.ShoppingCartItemExists(id))
             {
                 return NotFound();
             }
@@ -39,11 +39,11 @@ namespace avito.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<ProductDto>))]
+        [ProducesResponseType(200, Type = typeof(List<ShoppingCartItemDto>))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetShoppingCartItems()
         {
-            var shoppingCartItems = _mapper.Map<List<ProductDto>>(await _shoppingCartItemRepository.GetShoppingCartItems());
+            var shoppingCartItems = _mapper.Map<List<ShoppingCartItemDto>>(await _shoppingCartItemRepository.GetShoppingCartItems());
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -64,6 +64,16 @@ namespace avito.Controllers
             {
                 ModelState.AddModelError("", "Товар с таким id уже существует");
                 return StatusCode(422, ModelState);
+            }
+            if(!_productRepository.ProductExists(productId,shoppingCartItemCreate.Name,shoppingCartItemCreate.Price))
+            {
+                ModelState.AddModelError("", "Товара с такими параметрами не найдено");
+                return NotFound(ModelState);
+            }
+            if (!_shoppingCartRepository.ShoppingCartExists(shoppingCartId))
+            {
+                ModelState.AddModelError("", "Корзины с таким id не найдено");
+                return NotFound(ModelState);
             }
             var shoppingCartItemMap = _mapper.Map<ShoppingCartItem>(shoppingCartItemCreate);
             var shoppingCart = await _shoppingCartRepository.GetShoppingCart(shoppingCartId);
@@ -92,7 +102,7 @@ namespace avito.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (_shoppingCartItemRepository.ShoppingCartItemExists(shoppingCartItemId))
+            if (!_shoppingCartItemRepository.ShoppingCartItemExists(shoppingCartItemId))
             {
                 return NotFound();
             }

@@ -6,6 +6,7 @@ namespace avito.Models
     public class ShoppingCartItem
     {
         public int Id { get; set; }
+        public string Name { get; set; }
         public decimal Price { get; set; }
         [ForeignKey(nameof(ProductId))]
         public int ProductId { get; set; }

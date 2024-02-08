@@ -12,6 +12,7 @@ namespace avito.Interfaces
         bool UpdateProduct(Product product);
         bool Save();
         bool ProductExists(int id);
+        public bool ProductExists(int id, string name, decimal price);
         bool DeleteProducts(List<Product> products);
         decimal GetProductRating(int id);
     }
