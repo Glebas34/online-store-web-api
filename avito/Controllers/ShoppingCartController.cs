@@ -27,7 +27,7 @@ namespace avito.Controllers
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetShoppingCart(int shoppingCartId)
         {
-            if (_shoppingCartRepository.ShoppingCartExists(shoppingCartId))
+            if (!_shoppingCartRepository.ShoppingCartExists(shoppingCartId))
             {
                 return NotFound();
             }
@@ -78,7 +78,7 @@ namespace avito.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (!_shoppingCartRepository.ShoppingCartExists(shoppingCartCreate.Id))
+            if (_shoppingCartRepository.ShoppingCartExists(shoppingCartCreate.Id))
             {
                 ModelState.AddModelError("", "Корзина с таким id уже существует");
                 return StatusCode(422, ModelState);
@@ -91,6 +91,8 @@ namespace avito.Controllers
             }
             var shoppingCartMap = _mapper.Map<ShoppingCart>(shoppingCartCreate);
             shoppingCartMap.User = appUser;
+            appUser.ShoppingCartId = shoppingCartMap.Id;
+            appUser.ShoppingCart = shoppingCartMap;
             if (!_shoppingCartRepository.CreateShoppingCart(shoppingCartMap))
             {
                 ModelState.AddModelError("", "Что-то пошло не так при сохранении");
@@ -113,7 +115,7 @@ namespace avito.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (_shoppingCartRepository.ShoppingCartExists(shoppingCartId))
+            if (!_shoppingCartRepository.ShoppingCartExists(shoppingCartId))
             {
                 return NotFound();
             }
@@ -145,10 +147,12 @@ namespace avito.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var itemsToDelete = shoppingCartToDelete.ShoppingCartItems.ToList();
-            if (!_shoppingCartItemRepository.DeleteShoppingCartItems(itemsToDelete))
-            {
-                ModelState.AddModelError("","Что-то пошло не так при удалении предметов из корзины");
+            var itemsToDelete = shoppingCartToDelete.ShoppingCartItems;
+            if (itemsToDelete != null) { 
+                if (!_shoppingCartItemRepository.DeleteShoppingCartItems(itemsToDelete.ToList()))
+                {
+                    ModelState.AddModelError("", "Что-то пошло не так при удалении предметов из корзины");
+                } 
             }
             if (!_shoppingCartRepository.DeleteShoppingCart(shoppingCartToDelete))
             {

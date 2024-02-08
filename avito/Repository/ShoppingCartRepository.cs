@@ -21,7 +21,6 @@ namespace avito.Repository
 
         public bool DeleteShoppingCart(ShoppingCart shoppingCart)
         {
-            _context.RemoveRange(shoppingCart.ShoppingCartItems);
             _context.Remove(shoppingCart);
             return Save();
         }
@@ -40,11 +39,15 @@ namespace avito.Repository
         {
             decimal total = 0;
             var shoppingCart = await _context.ShoppingCarts.FindAsync(id);
-            foreach(var item in shoppingCart.ShoppingCartItems)
+            if (shoppingCart.ShoppingCartItems != null)
             {
-                total += item.Price;
+                foreach (var item in shoppingCart.ShoppingCartItems)
+                {
+                    total += item.Price;
+                }
+                return total;
             }
-            return total;
+            return 0;
         }
 
         public bool Save()
