@@ -154,6 +154,10 @@ namespace avito.Controllers
                     ModelState.AddModelError("", "Что-то пошло не так при удалении предметов из корзины");
                 } 
             }
+            var appUser= await _appUserRepository.GetAppUserById(shoppingCartId);
+            appUser.ShoppingCartId = null;
+            appUser.ShoppingCart = null;
+            _appUserRepository.UpdateAppUser(appUser);
             if (!_shoppingCartRepository.DeleteShoppingCart(shoppingCartToDelete))
             {
                 ModelState.AddModelError("", "Что-то пошло не так при удалении");

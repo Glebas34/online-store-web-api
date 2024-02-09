@@ -50,7 +50,7 @@ namespace avito.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> CreateAppUser([FromBody] AppUserDto appUserDto)
+        public IActionResult CreateAppUser([FromBody] AppUserDto appUserDto)
         {
             if (appUserDto == null)
             {

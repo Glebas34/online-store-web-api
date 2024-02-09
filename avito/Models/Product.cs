@@ -11,8 +11,8 @@ namespace avito.Models
         public uint Avalible {  get; set; }
         public decimal Price { get; set; }
         [ForeignKey(nameof(Category))]
-        public int CategoryId { get; set; }
-        public Category Category { get; set; }
+        public int? CategoryId { get; set; }
+        public Category? Category { get; set; }
         public ICollection<Review> Reviews { get; set; }
         public ICollection<ShoppingCartItem> ShoppingCartItems { get; set; }
     }

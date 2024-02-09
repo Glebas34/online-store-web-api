@@ -13,6 +13,6 @@ namespace avito.Models
         public Product Product { get; set; }
         [ForeignKey(nameof(ShoppingCart))]
         public int ShoppingCartId { get; set; }
-        public ShoppingCart? ShoppingCart { get; set; }
+        public ShoppingCart ShoppingCart { get; set; }
     }
 }
