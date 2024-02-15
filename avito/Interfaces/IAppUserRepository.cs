@@ -1,6 +1,4 @@
 ﻿using avito.Models;
-using Microsoft.EntityFrameworkCore;
-
 namespace avito.Interfaces
 {
     public interface IAppUserRepository

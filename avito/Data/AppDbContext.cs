@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using avito.Models;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace avito.Data
 {

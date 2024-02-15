@@ -1,7 +1,6 @@
 ﻿using avito.Data;
 using avito.Interfaces;
 using avito.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace avito.Repository

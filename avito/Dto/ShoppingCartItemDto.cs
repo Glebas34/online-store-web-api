@@ -1,6 +1,4 @@
-﻿using avito.Models;
-
-namespace avito.Dto
+﻿namespace avito.Dto
 {
     public class ShoppingCartItemDto
     {
