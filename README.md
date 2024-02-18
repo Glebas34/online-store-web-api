@@ -4,7 +4,7 @@ online-store-web-api - это Web API для онлайн-магазина с р
 ##Запуск проекта
 1. Откройте проект в Visual Studio.
 2. Создайте локальную базу данных PostgreSQL на своём компьютере.
-3.Перейдите обратно в отркытый проект и откройте файл appsettings.json.
+3. Перейдите обратно в отркытый проект и откройте файл appsettings.json.
 4. В ConnectionStrings измените строку PostgreSql, исходя из свойств вашей базы данных: "PostgreSql": "Host=localhost; Database=your_database; Username=your_username; Password=your_password".
 5. Откройте консоль диспетчера пакетов.
 6. Пропишите в ней команду Update-Database.
