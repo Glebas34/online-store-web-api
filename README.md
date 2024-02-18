@@ -28,6 +28,6 @@ online-store-web-api - это Web API для онлайн-магазина с р
 
 Контроллеры: AppUserController.cs, CategoryController.cs, ProductController.cs, ReviewController.cs, ShoppingCartController.cs, ShoppingCartItemController.cs.
 
-В классы в директории Dto нужны для того, чтобы пользователь не работал с моделями на прямую, и тем самым не имел доступ к внешним ключам или навигационным свойствам модели. DTO - это Data Transfer Object(объект для передачи данных). Класс MappingProfile связывает модели и DTO-классы.
+В классы в директории Dto нужны для того, чтобы пользователь не работал с моделями на прямую, и тем самым не имел доступ к внешним ключам или навигационным свойствам модели. Т.е. каждый класс в директории Dto - это DTO - Data Transfer Object(объект для передачи данных). Класс MappingProfile связывает модели и DTO-классы.
 
-Классы в папке Repository и класс AppDbContext нужны для работы c базой данных
+Классы в папке Repository и класс AppDbContext нужны для работы c базой данных.
