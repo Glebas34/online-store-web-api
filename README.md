@@ -23,6 +23,11 @@ online-store-web-api - это Web API для онлайн-магазина с р
 
 ### Архитектура проекта
 При написании проекта была использована REST-архитектура, т.е. контроллеры обрабатывают 4 http-запроса к серверу: GET, POST, UPDATE, CREATE.
+
 Модели: AppUser.cs, Category.cs, Product.cs, Review.cs, ShoppingCart.cs, ShoppingCartItem.cs.
+
 Контроллеры: AppUserController.cs, CategoryController.cs, ProductController.cs, ReviewController.cs, ShoppingCartController.cs, ShoppingCartItemController.cs.
-В директории avito/Dto хранятся 
+
+В классы в директории Dto нужны для того, чтобы пользователь не работал с моделями на прямую, и тем самым не имел доступ к внешним ключам или навигационным свойствам модели. DTO - это Data Transfer Object(объект для передачи данных). Класс MappingProfile связывает модели и DTO-классы.
+
+Классы в папке Repository и класс AppDbContext нужны для работы c базой данных
