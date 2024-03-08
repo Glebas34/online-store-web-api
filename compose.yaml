@@ -1,0 +1,55 @@
+version: '3.9'
+
+networks:
+  dev:
+    driver: bridge
+
+services:
+  online-store.api:
+    image: ${DOCKER_REGISTRY-}online-store-api
+    container_name: online-store-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+      - 8081:8081
+    environment:
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certificates/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=pass1234
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080
+      - ASPNETCORE_ENVIROMENT=Development
+    networks:
+      - dev
+    depends_on:
+      online-store.db:
+        condition: service_healthy
+
+  online-store.db:
+    image: postgres:latest
+    container_name: online-store.db
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=online-store
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_USER=postgres
+    ports:
+      - 5432:5432
+    networks:
+      - dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d online-store"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+volumes:
+  db-data:
+
