@@ -4,7 +4,7 @@ online-store-web-api - это Web API для онлайн-магазина с р
 ## Запуск проекта
 1. Скачайте и установите Docker: https://www.docker.com/get-started/
 2. Запустите Docker Desktop.
-3. Откройте терминал(например, PowerShell или Bash).
+3. Откройте терминал( например, PowerShell или Bash).
 4. Перейдите в директорию с проектом.
 5. Наберите в терминале команду: docker compose up.
 6. После запуска контейнеров приложение будет доступно по ссылкt: https://localhost:8081/swagger/index.html
