@@ -2,12 +2,12 @@
 ## О проекте
 online-store-web-api - это Web API для онлайн-магазина с реализованными CRUD-операциями для шести сущностей: пользователь, категория товара, товар, отзыв, корзина, предмет из корзины.
 ## Запуск проекта
-1. Откройте проект в Visual Studio.
-2. Создайте локальную базу данных PostgreSQL на своём компьютере.
-3. Перейдите обратно в отркытый проект и откройте файл appsettings.json.
-4. В ConnectionStrings измените строку PostgreSql, исходя из свойств вашей базы данных: "PostgreSql": "Host=localhost; Database=your_database; Username=your_username; Password=your_password".
-5. Откройте консоль диспетчера пакетов.
-6. Пропишите в ней команду Update-Database.
+1. Скачайте и установите Docker: https://www.docker.com/get-started/
+2. Запустите Docker Desktop.
+3. Откройте терминал( например, PowerShell или Bash).
+4. Перейдите в директорию с проектом.
+5. Наберите в терминале команду: `docker compose up`.
+6. После запуска контейнеров приложение будет доступно по ссылке: https://localhost:8081/swagger/index.html
 
 После проделанных выше действий приложение готово к работе.
 
@@ -16,6 +16,7 @@ online-store-web-api - это Web API для онлайн-магазина с р
 + ASP.NET Core Web-API
 + Swagger
 + PostgreSQL
++ Entity Framework Core
 
 ### Функционал
 Базовые CRUD-операциями для шести сущностей: пользователь, категория товара, товар, отзыв, корзина, предмет из корзины.
